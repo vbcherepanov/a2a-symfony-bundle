@@ -1,0 +1,12 @@
+/vendor/
+/.env
+/var/
+/.php-cs-fixer.cache
+/.phpunit.cache/
+/.phpstan-cache/
+/dist/
+/.DS_Store
+/docs/SESSION_*.md
+/docs/TASKS.md
+/docs/PROGRESS.md
+/docs/*.txt

@@ -1,0 +1,19 @@
+services:
+  php:
+    image: ${BUNDLE_IMAGE:-a2a-symfony-bundle-dev:local}
+    build:
+      context: ${BUNDLE_SOURCE:-.}
+    working_dir: ${BUNDLE_WORKDIR:-/workspace/a2a-symfony-bundle}
+    volumes:
+      - ${BUNDLE_SOURCE:-.}:/workspace/a2a-symfony-bundle
+    user: ${BUNDLE_UID:-1000}:${BUNDLE_GID:-1000}
+    environment:
+      COMPOSER_ROOT_VERSION: ${COMPOSER_ROOT_VERSION:-dev-main}
+    init: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    healthcheck:
+      test: [CMD, php, -r, "exit(class_exists('DateTime') ? 0 : 1);"]
+      interval: ${HEALTH_INTERVAL:-30s}
+      timeout: ${HEALTH_TIMEOUT:-5s}
+      retries: ${HEALTH_RETRIES:-3}

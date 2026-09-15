@@ -1,0 +1,6 @@
+ARG BUNDLE_IMAGE=a2a-symfony-bundle-dev:local
+FROM ${BUNDLE_IMAGE}
+USER root
+RUN apk add --no-cache postgresql-dev \
+    && docker-php-ext-install pdo_pgsql
+USER sdk

@@ -1,0 +1,30 @@
+services:
+  php:
+    image: ${POSTGRES_TEST_IMAGE:-a2a-symfony-bundle-postgres:local}
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+      args:
+        BUNDLE_IMAGE: ${BUNDLE_IMAGE:-a2a-symfony-bundle-dev:local}
+    environment:
+      A2A_TEST_DB_HOST: ${POSTGRES_TEST_HOST:-postgres}
+      A2A_TEST_DB_PORT: ${POSTGRES_TEST_PORT:-5432}
+      A2A_TEST_DB_NAME: ${POSTGRES_TEST_DB:-a2a_test}
+      A2A_TEST_DB_USER: ${POSTGRES_TEST_USER:-a2a_test}
+      A2A_TEST_DB_PASSWORD: ${POSTGRES_TEST_PASSWORD:-local-test-password}
+    depends_on:
+      postgres:
+        condition: service_healthy
+  postgres:
+    image: ${POSTGRES_IMAGE:-postgres:18-alpine}
+    environment:
+      POSTGRES_DB: ${POSTGRES_TEST_DB:-a2a_test}
+      POSTGRES_USER: ${POSTGRES_TEST_USER:-a2a_test}
+      POSTGRES_PASSWORD: ${POSTGRES_TEST_PASSWORD:-local-test-password}
+    tmpfs:
+      - ${POSTGRES_TEST_DATA_DIR:-/var/lib/postgresql}
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: ${POSTGRES_TEST_HEALTH_INTERVAL:-1s}
+      timeout: ${POSTGRES_TEST_HEALTH_TIMEOUT:-5s}
+      retries: ${POSTGRES_TEST_HEALTH_RETRIES:-30}

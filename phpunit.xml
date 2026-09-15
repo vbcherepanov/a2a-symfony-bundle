@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php" colors="true" cacheDirectory=".phpunit.cache" failOnWarning="true" failOnRisky="true"><testsuites><testsuite name="Bundle"><directory>tests</directory><exclude>tests/Postgres</exclude></testsuite></testsuites></phpunit>

@@ -1,0 +1,14 @@
+{
+  "name": "Conformance fixture",
+  "description": "Test agent",
+  "version": "1.0.0",
+  "supportedInterfaces": [
+    {"url": "https://agent.example/a2a/rpc", "protocolBinding": "JSONRPC", "protocolVersion": "1.0"},
+    {"url": "https://agent.example/a2a", "protocolBinding": "HTTP+JSON", "protocolVersion": "1.0"},
+    {"url": "https://agent.example:50051", "protocolBinding": "GRPC", "protocolVersion": "1.0"}
+  ],
+  "capabilities": {"streaming": true, "pushNotifications": true, "extendedAgentCard": true},
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["text/plain"],
+  "skills": [{"id": "fixture", "name": "Fixture", "description": "Integration fixture", "tags": ["test"]}]
+}

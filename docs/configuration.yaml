@@ -1,0 +1,86 @@
+a2a:
+    card_file:            ~ # Required
+    extended_card_file:   null
+    executor:             ~ # Required
+    public_url:           ~ # Required
+    log_stream:           'php://stderr'
+    metrics_service:      a2a.metrics
+    metrics_file:         '%kernel.project_dir%/var/a2a/metrics.json'
+    clients:
+
+        # Prototype
+        name:
+            endpoint:             ~ # Required
+            binding:              jsonrpc # One of "jsonrpc"; "rest"; "grpc"
+            timeout_seconds:      60.0
+            max_message_bytes:    4194304
+            headers:
+
+                # Prototype
+                name:                 ~
+            extensions:           []
+            tls:
+                enabled:              true
+                root_certificates:    null
+                private_key:          null
+                certificate_chain:    null
+                ca_file:              null
+                certificate_file:     null
+                private_key_file:     null
+    auth:
+        service:              null
+        access_token_handler: null
+        tokens:
+
+            # Prototype
+            principal:            ~
+    storage:
+        driver:               file # One of "file"; "doctrine"
+        directory:            '%kernel.project_dir%/var/a2a'
+        connection:           doctrine.dbal.default_connection
+        table:                a2a_tasks
+        max_update_attempts:  5
+    messenger:
+        enabled:              false
+        bus:                  messenger.default_bus
+    transports:
+        jsonrpc:
+            enabled:              true
+            path:                 /a2a/rpc
+        rest:
+            enabled:              true
+            path:                 /a2a
+        grpc:
+            enabled:              false
+            host:                 127.0.0.1
+            port:                 50051
+            public_url:           null
+            workers:              4
+            max_requests_per_worker: 1000
+            max_concurrent_streams: 100
+            max_connections:      1024
+            tls:
+                certificate_file:     null
+                private_key_file:     null
+                client_ca_file:       null
+                require_client_certificate: false
+    discovery:
+        last_modified:        null
+        path:                 /.well-known/agent-card.json
+        cache_seconds:        300
+    limits:
+        request_timeout_seconds: 60.0
+        poll_interval_seconds: 0.1
+        worker_lease_seconds: 300.0
+        max_message_bytes:    4194304
+        max_events_per_task:  1000
+        max_history_messages: 1000
+        max_push_configs_per_task: 10
+    push:
+        allow_private_network: false
+        require_https:        true
+        allowed_hosts:        []
+        timeout_seconds:      10.0
+        max_attempts:         5
+        retry_delay_seconds:  5.0
+        max_pending_per_task: 1000
