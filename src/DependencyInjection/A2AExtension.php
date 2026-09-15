@@ -32,6 +32,9 @@ final class A2AExtension extends Extension
     }
     public function load(array $configs, ContainerBuilder $container): void
     {
+        if (array_filter($configs) === []) {
+            return;
+        }
         $config = $this->processConfiguration(new Configuration(), $configs);
         $ref = static fn (string $id): Reference => new Reference($id);
         $http = $config['transports'];

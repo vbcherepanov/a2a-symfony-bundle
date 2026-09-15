@@ -49,6 +49,8 @@ jobs:
         run: docker compose run --rm php composer audit
       - name: Install package into a clean application without native gRPC
         run: make package
+      - name: Install with Flex in Symfony skeleton and clear application caches
+        run: make test-flex
       - name: Save verified Composer package
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:

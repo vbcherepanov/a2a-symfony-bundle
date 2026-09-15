@@ -3,7 +3,8 @@
 The maintainer runs Git and publication commands. CI verifies the package and
 creates downloadable artifacts.
 
-1. Run `make verify`, `make test-postgres`, `make test-symfony` and `make package`.
+1. Run `make verify`, `make test-postgres`, `make test-symfony`, `make package`
+   and `make test-flex`.
 2. Push the reviewed changes and require **Bundle checks** to pass on GitHub.
 3. Move the changelog entry from Unreleased to the chosen version and date.
 4. Commit that change, push it and wait for CI before creating the version tag.
