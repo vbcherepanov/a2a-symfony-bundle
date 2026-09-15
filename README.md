@@ -28,7 +28,8 @@ Install the bundle inside your application's PHP container:
 docker compose run --rm php composer require vbcherepanov/a2a-symfony-bundle
 ~~~
 
-Register the bundle in `config/bundles.php`:
+Symfony Flex registers the bundle automatically. Without Flex, register it in
+`config/bundles.php`:
 
 ~~~php
 return [
@@ -37,7 +38,11 @@ return [
 ];
 ~~~
 
-The setup below is explicit; it does not depend on a Symfony Flex recipe.
+Until you add a non-empty `a2a` configuration, the bundle stays inactive: it
+registers no services or routes, and `cache:clear` works normally. Once configured,
+`card_file`, `executor`, `public_url` and authentication are required.
+
+Add the configuration and route import below together when enabling A2A.
 
 Import the routes in config/routes/a2a.yaml:
 
@@ -218,6 +223,7 @@ make verify
 make test-postgres
 make test-symfony
 make package
+make test-flex
 ~~~
 
 The repository has its own Dockerfile and test fixtures. Composer installs the
@@ -245,6 +251,10 @@ CI runs these checks on pull requests, pushes to `main` and version tags, and au
 dependencies for known vulnerabilities. A successful run attaches the package and
 checksum. Releases and Packagist registration are manual steps; see
 [the release checklist](docs/RELEASING.md).
+
+`make test-flex` installs the bundle archive into a clean Symfony 8.0 skeleton
+with Flex and Composer scripts enabled. It checks automatic bundle registration,
+development and production cache clearing, and absence of A2A routes before configuration.
 
 The SDK's unchanged official TCK baseline has three known CORE-SEND-003 failures.
 The isolated diagnostic correction passes. Bundle CI checks Symfony integration;

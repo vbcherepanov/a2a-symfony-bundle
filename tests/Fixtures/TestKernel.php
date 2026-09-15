@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 final class TestKernel extends Kernel
 {
     use MicroKernelTrait;
-    public function __construct(private readonly bool $grpc = false, private readonly bool $messenger = false, private readonly bool $doctrine = false)
+    public function __construct(private readonly bool $grpc = false, private readonly bool $messenger = false, private readonly bool $doctrine = false, private readonly bool $configured = true)
     {
         parent::__construct('test', true);
         $this->runDirectory = sys_get_temp_dir().'/a2a-bundle-'.bin2hex(random_bytes(8));
@@ -42,6 +42,9 @@ final class TestKernel extends Kernel
             $framework['messenger'] = ['transports' => ['async' => 'in-memory://'], 'routing' => [ProcessQueue::class => 'async']];
         }
         $container->extension('framework', $framework);
+        if (!$this->configured) {
+            return;
+        }
         $container->services()->set(TestExecutor::class);
         if ($this->doctrine) {
             $container->services()->set('test.connection', \Doctrine\DBAL\Connection::class)->factory([\Doctrine\DBAL\DriverManager::class, 'getConnection'])->args([['driver' => 'pdo_sqlite', 'memory' => true]]);
@@ -62,6 +65,8 @@ final class TestKernel extends Kernel
     }
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import('.', 'a2a');
+        if ($this->configured) {
+            $routes->import('.', 'a2a');
+        }
     }
 }

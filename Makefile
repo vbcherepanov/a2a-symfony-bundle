@@ -1,6 +1,8 @@
-.PHONY: help up down restart logs shell test test-postgres test-symfony build lint clean ps install verify style package
+.PHONY: help up down restart logs shell test test-postgres test-symfony test-flex build lint clean ps install verify style package
 help:
-	@echo 'up down restart logs shell install test test-postgres test-symfony lint style build verify package clean ps'
+	@echo 'up down restart logs shell install test test-postgres test-symfony test-flex lint style build verify package clean ps'
+test-flex:
+	docker compose run --rm php php tools/test-flex.php
 test-symfony:
 	docker compose run --rm php php tools/test-symfony.php
 test-postgres:
