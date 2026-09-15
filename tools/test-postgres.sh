@@ -7,4 +7,6 @@ compose() {
 trap 'compose down --remove-orphans' EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
-compose run --build --rm php vendor/bin/phpunit -c phpunit.postgres.xml
+# The Docker Engine builder can resolve the locally loaded PHP base image.
+compose build --builder default php
+compose run --rm php vendor/bin/phpunit -c phpunit.postgres.xml
