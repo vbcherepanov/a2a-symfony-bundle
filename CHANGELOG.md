@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.0 — 2026-09-15
 
 Initial Symfony integration for A2A protocol 1.0.0, using A2A PHP SDK 1.0.0.
 
