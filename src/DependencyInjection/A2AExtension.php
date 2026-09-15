@@ -32,6 +32,7 @@ final class A2AExtension extends Extension
     }
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $container->register(A2ARouteLoader::class)->addTag('routing.loader');
         if (array_filter($configs) === []) {
             return;
         }
@@ -137,7 +138,7 @@ final class A2AExtension extends Extension
         $container->register(Gateway::class)->setArguments([$ref(Dispatcher::class), $ref(Authenticator::class), $ref($config['metrics_service']), $ref('a2a.logger'), $ref(AgentCard::class), $ref(ServerOptions::class)]);
         $container->register(Endpoint::class)->setArguments([$ref(Gateway::class), $ref(AgentCard::class), $ref(HttpOptions::class), $ref(ServerOptions::class)]);
         $container->register(A2AController::class)->setArguments([$ref(Endpoint::class)])->addTag('controller.service_arguments');
-        $container->register(A2ARouteLoader::class)->setArguments([$ref(HttpOptions::class)])->addTag('routing.loader');
+        $container->getDefinition(A2ARouteLoader::class)->setArgument('$options', $ref(HttpOptions::class));
         $container->register(GrpcEndpoint::class)->setArguments([$ref(Gateway::class), $ref(ServerOptions::class)]);
         $container->register(OpenSwooleRuntime::class)->setArguments([$ref(GrpcEndpoint::class), $ref(GrpcServerOptions::class), $ref(ServerOptions::class), $ref('a2a.logger')]);
         $container->register(GrpcServeCommand::class)->setArguments([$ref(OpenSwooleRuntime::class)])->addTag('console.command');

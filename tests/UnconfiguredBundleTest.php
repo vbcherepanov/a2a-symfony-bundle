@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace A2A\Bundle\Tests;
 
 use A2A\Bundle\DependencyInjection\A2AExtension;
+use A2A\Bundle\Routing\A2ARouteLoader;
 use A2A\Bundle\Tests\Fixtures\TestKernel;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
 
 final class UnconfiguredBundleTest extends TestCase
 {
@@ -29,13 +32,27 @@ final class UnconfiguredBundleTest extends TestCase
         }
     }
 
-    public function testEmptyConfigurationRegistersNoServices(): void
+    public function testDebugRouterAcceptsRouteImportWithoutConfiguration(): void
+    {
+        $kernel = new TestKernel(configured: false, routeFile: true);
+        try {
+            $application = new Application($kernel);
+            $command = new CommandTester($application->find('debug:router'));
+            self::assertSame(0, $command->execute(['--format' => 'json']));
+            self::assertSame([], json_decode($command->getDisplay(), true, flags: JSON_THROW_ON_ERROR));
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testEmptyConfigurationRegistersOnlyAnInactiveRouteLoader(): void
     {
         $container = new ContainerBuilder();
-        $before = $container->getDefinitions();
+        $before = array_keys($container->getDefinitions());
         (new A2AExtension())->load([[]], $container);
-        self::assertSame($before, $container->getDefinitions());
+        self::assertSame([...$before, A2ARouteLoader::class], array_keys($container->getDefinitions()));
         self::assertSame([], $container->getAliases());
+        self::assertCount(0, (new A2ARouteLoader())->load('.', 'a2a'));
     }
 
     public static function requiredFields(): iterable

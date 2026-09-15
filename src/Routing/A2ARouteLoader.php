@@ -11,13 +11,16 @@ use Symfony\Component\Routing\{Route, RouteCollection};
 
 final class A2ARouteLoader extends Loader
 {
-    public function __construct(private readonly HttpOptions $options)
+    public function __construct(private readonly ?HttpOptions $options = null)
     {
         parent::__construct();
     }
     public function load(mixed $resource, ?string $type = null): RouteCollection
     {
         $routes = new RouteCollection();
+        if ($this->options === null) {
+            return $routes;
+        }
         $controller = ['_controller' => A2AController::class];
         $routes->add('a2a_card', new Route($this->options->cardPath, $controller, methods: ['GET']));
         if ($this->options->jsonRpcEnabled) {

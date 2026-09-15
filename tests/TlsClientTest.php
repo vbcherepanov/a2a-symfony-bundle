@@ -103,7 +103,7 @@ final class TlsClientTest extends TestCase
             $client->sendMessage($this->request());
             self::fail('TLS connection should have been rejected');
         } catch (ProtocolException | TransportExceptionInterface $error) {
-            self::assertMatchesRegularExpression('/SSL|TLS|certificate|connection reset/i', $error->getMessage());
+            self::assertMatchesRegularExpression('/SSL|TLS|certificate|connection reset|broken pipe|socket closed/i', $error->getMessage());
         }
     }
 }

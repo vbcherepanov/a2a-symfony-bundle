@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 final class TestKernel extends Kernel
 {
     use MicroKernelTrait;
-    public function __construct(private readonly bool $grpc = false, private readonly bool $messenger = false, private readonly bool $doctrine = false, private readonly bool $configured = true)
+    public function __construct(private readonly bool $grpc = false, private readonly bool $messenger = false, private readonly bool $doctrine = false, private readonly bool $configured = true, private readonly bool $routeFile = false)
     {
         parent::__construct('test', true);
         $this->runDirectory = sys_get_temp_dir().'/a2a-bundle-'.bin2hex(random_bytes(8));
@@ -65,8 +65,6 @@ final class TestKernel extends Kernel
     }
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        if ($this->configured) {
-            $routes->import('.', 'a2a');
-        }
+        $routes->import($this->routeFile ? __DIR__.'/routes.yaml' : '.', $this->routeFile ? null : 'a2a');
     }
 }
