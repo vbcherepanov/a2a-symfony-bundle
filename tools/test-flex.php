@@ -32,11 +32,12 @@ $configuration = json_decode(file_get_contents($configurationFile), flags: JSON_
 $configuration->repositories = [[
     'type' => 'path',
     'url' => $directory.'/package',
-    'options' => ['symlink' => false, 'versions' => ['vbcherepanov/a2a-symfony-bundle' => '1.0.1']],
+    'options' => ['symlink' => false, 'versions' => ['vbcherepanov/a2a-symfony-bundle' => '1.0.2']],
 ]];
 $filesystem->dumpFile($configurationFile, json_encode($configuration, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));
 
-runFlexCommand(['composer', 'require', 'vbcherepanov/a2a-symfony-bundle:1.0.1', '--no-interaction', '--prefer-dist', '--no-progress'], $application);
+$filesystem->copy($root.'/tests/Fixtures/routes.yaml', $application.'/config/routes/a2a.yaml');
+runFlexCommand(['composer', 'require', 'vbcherepanov/a2a-symfony-bundle:1.0.2', '--no-interaction', '--prefer-dist', '--no-progress'], $application);
 $bundles = require $application.'/config/bundles.php';
 if (($bundles[A2A\Bundle\A2ABundle::class]['all'] ?? false) !== true) {
     throw new RuntimeException('Flex did not automatically register A2ABundle');
@@ -50,4 +51,4 @@ foreach (['dev', 'prod'] as $environment) {
         }
     }
 }
-fwrite(STDOUT, "Flex registered the bundle; Composer scripts and dev/prod cache clearing passed without A2A configuration.\n");
+fwrite(STDOUT, "Flex installation, cache clearing and route inspection passed with an A2A route file and no A2A configuration.\n");

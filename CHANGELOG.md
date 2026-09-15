@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.2 — 2026-09-15
+
+- Always register the `a2a` route loader. Without A2A configuration it returns an
+  empty collection, allowing a recipe to install the route import immediately.
+- Add regression coverage for `debug:router` with a route file and no A2A settings.
+- Check Flex installation with that route file already present, including cache
+  clearing and route inspection in development and production.
+
 ## 1.0.1 — 2026-09-15
 
 - Allow Symfony Flex to register the bundle before A2A is configured. Without

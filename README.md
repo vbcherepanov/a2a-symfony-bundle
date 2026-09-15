@@ -38,11 +38,13 @@ return [
 ];
 ~~~
 
-Until you add a non-empty `a2a` configuration, the bundle stays inactive: it
-registers no services or routes, and `cache:clear` works normally. Once configured,
+Until you add a non-empty `a2a` configuration, the route loader stays available
+but returns no routes. Agent services remain inactive, so a route import can be
+present immediately after installation. Both `cache:clear` and `debug:router`
+work without A2A configuration. Once configured,
 `card_file`, `executor`, `public_url` and authentication are required.
 
-Add the configuration and route import below together when enabling A2A.
+Use the route import below, then configure your executor when enabling A2A.
 
 Import the routes in config/routes/a2a.yaml:
 
@@ -254,7 +256,8 @@ checksum. Releases and Packagist registration are manual steps; see
 
 `make test-flex` installs the bundle archive into a clean Symfony 8.0 skeleton
 with Flex and Composer scripts enabled. It checks automatic bundle registration,
-development and production cache clearing, and absence of A2A routes before configuration.
+development and production cache clearing, and `debug:router` with an A2A route
+import already present but no A2A configuration. No agent routes are exposed yet.
 
 The SDK's unchanged official TCK baseline has three known CORE-SEND-003 failures.
 The isolated diagnostic correction passes. Bundle CI checks Symfony integration;
