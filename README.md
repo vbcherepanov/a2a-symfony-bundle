@@ -22,14 +22,11 @@ Prometheus counters/histograms.
 | Native gRPC | Optional; requirements below |
 | Development | Docker and Docker Compose v2 |
 
-Once registered on Packagist, install the bundle inside your application's PHP container:
+Install the bundle inside your application's PHP container:
 
 ~~~sh
 docker compose run --rm php composer require vbcherepanov/a2a-symfony-bundle
 ~~~
-
-Before registration, add this GitHub repository as a Composer VCS repository and
-require `dev-main`. The SDK dependency is already available on Packagist.
 
 Register the bundle in `config/bundles.php`:
 
