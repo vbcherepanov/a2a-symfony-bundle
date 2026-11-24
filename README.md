@@ -241,7 +241,8 @@ no persistent database volume. Test settings are listed in `.env.example`.
 
 `make verify` runs Composer validation, tests, PHPStan level 8, PSR-12 checks and
 Symfony container compilation. `make test-symfony` repeats the tests and compilation
-with Symfony 7.4 and 8.0 in temporary projects; the lockfile covers Symfony 8.1.
+with Symfony 7.4 and with the Symfony 8 minor locked in `composer.lock`, in temporary
+projects. Symfony 8.0 reached end of life and Composer no longer installs it.
 
 `make package` creates `dist/a2a-symfony-bundle.zip` and `dist/SHA256SUMS`. It installs
 the archive in a fresh consumer project and checks discovery and JSON-RPC task
@@ -254,8 +255,9 @@ dependencies for known vulnerabilities. A successful run attaches the package an
 checksum. Releases and Packagist registration are manual steps; see
 [the release checklist](docs/RELEASING.md).
 
-`make test-flex` installs the bundle archive into a clean Symfony 8.0 skeleton
-with Flex and Composer scripts enabled. It checks automatic bundle registration,
+`make test-flex` installs the bundle archive into a clean skeleton of the locked
+Symfony 8 minor with Flex, contrib recipes and Composer scripts enabled. It checks
+automatic bundle registration,
 development and production cache clearing, and `debug:router` with an A2A route
 import already present but no A2A configuration. No agent routes are exposed yet.
 

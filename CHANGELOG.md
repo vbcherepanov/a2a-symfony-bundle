@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Development checks only; the published package is unchanged.
+- `make test-symfony` and `make test-flex` use Symfony 7.4 and the Symfony 8 minor
+  locked in `composer.lock`. Symfony 8.0 reached end of life and Composer blocks it
+  because of unfixed security advisories.
+- `make test-flex` enables contrib recipes, so Flex applies the published
+  `symfony/recipes-contrib` recipe instead of ignoring it.
+- Refresh `composer.lock` and the pinned GitHub Actions.
+
 ## 1.0.2 — 2026-09-15
 
 - Always register the `a2a` route loader. Without A2A configuration it returns an

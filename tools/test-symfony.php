@@ -6,13 +6,17 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
 require dirname(__DIR__).'/vendor/autoload.php';
+require __DIR__.'/locked-symfony-version.php';
+
+/** Oldest supported Symfony line; the newest one comes from composer.lock. */
+const LOWEST_SYMFONY_VERSION = '7.4';
 
 $root = dirname(__DIR__);
 $filesystem = new Filesystem();
 $configuration = json_decode(file_get_contents($root.'/composer.json'), true, flags: JSON_THROW_ON_ERROR);
 $lock = json_decode(file_get_contents($root.'/composer.lock'), true, flags: JSON_THROW_ON_ERROR);
 
-foreach (['7.4', '8.0'] as $version) {
+foreach (array_unique([LOWEST_SYMFONY_VERSION, lockedSymfonyVersion($root)]) as $version) {
     $directory = sys_get_temp_dir().'/a2a-symfony-'.$version.'-'.bin2hex(random_bytes(8));
     $filesystem->mkdir($directory);
     foreach (['src', 'tests'] as $path) {
