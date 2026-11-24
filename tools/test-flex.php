@@ -6,6 +6,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
 require dirname(__DIR__).'/vendor/autoload.php';
+require __DIR__.'/locked-symfony-version.php';
 
 $root = dirname(__DIR__);
 $directory = sys_get_temp_dir().'/a2a-flex-'.bin2hex(random_bytes(8));
@@ -24,7 +25,7 @@ function runFlexCommand(array $command, string $directory): string
 
 runFlexCommand(['composer', 'archive', '--format=zip', '--dir='.$directory, '--file=bundle'], $root);
 runFlexCommand(['unzip', '-q', $directory.'/bundle.zip', '-d', $directory.'/package'], $root);
-runFlexCommand(['composer', 'create-project', 'symfony/skeleton:8.0.*', 'application', '--no-interaction', '--prefer-dist', '--no-progress'], $directory);
+runFlexCommand(['composer', 'create-project', 'symfony/skeleton:'.lockedSymfonyVersion($root).'.*', 'application', '--no-interaction', '--prefer-dist', '--no-progress'], $directory);
 
 $application = $directory.'/application';
 $configurationFile = $application.'/composer.json';
@@ -34,6 +35,9 @@ $configuration->repositories = [[
     'url' => $directory.'/package',
     'options' => ['symlink' => false, 'versions' => ['vbcherepanov/a2a-symfony-bundle' => '1.0.2']],
 ]];
+// The bundle has a recipe in symfony/recipes-contrib; without this flag Flex ignores it
+// in non-interactive mode and does not register the bundle.
+$configuration->extra->symfony->{'allow-contrib'} = true;
 $filesystem->dumpFile($configurationFile, json_encode($configuration, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));
 
 $filesystem->copy($root.'/tests/Fixtures/routes.yaml', $application.'/config/routes/a2a.yaml');
